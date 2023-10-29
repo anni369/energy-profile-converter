@@ -3,21 +3,21 @@ def converter():
     converted_data = []
     converted_data_units = []
     interval_step = 1
-    try:
-        """ parser = argparse.ArgumentParser(
-                    prog='ProgramName',
-                    description='What the program does',
-                    epilog='Text at the bottom of help')"""
-        input_ = "example.json" #str(input("input_file: "))
-        output_ = "output.json" #str(input("output_file: "))
-        target_interval = 60 #int(input("Interval in minutes: "))
-        target_units = "KJ" #str(input("Units: "))
-        if target_interval != 1 or 15 or 30 or 60 or 1440:
-            raise ValueError("Please, specify the valid interval in minutes: 1, 15, 30, 60 or 1440")
-        if target_units.lower() != "kwh" or "wh" or "wj" or "j":
-            raise ValueError("Please, specify the valid units: kWh, Wh, KJ or J")
-    except:
-        pass
+
+    parser = argparse.ArgumentParser(
+                prog='profile_converter.py',
+                description='convert_energy-profile',
+                epilog='Text at the bottom of help')
+    parser.add_argument('input_filename') # user specifies: value # https://docs.python.org/3/library/argparse.html#the-add-argument-method
+    parser.add_argument('output_filename')
+    parser.add_argument('--interval', type = int, default=60, choices = [1,15, 30, 60, 1440] ) # user specifies: --name value # https://docs.python.org/3/library/argparse.html#choices
+    parser.add_argument('--unit', default = "KJ", choices = ["kWh","Wh", "KJ", "J"])
+    args = parser.parse_args()
+
+    input_ = args.input_filename
+    output_ = args.output_filename
+    target_interval = args.interval
+    target_units = args.unit
 
     with open(input_, "r") as my_file, open(output_, "w") as output:
         data = my_file.read()
@@ -42,18 +42,18 @@ def converter():
         
         #data to unit:
         conv_dict = {}
-        conv_dict["kwh"] = float (0.001)
-        conv_dict["wh"] = 1
-        conv_dict["kj"] = float (3.6)
-        conv_dict["j"] =  3600
-        conv_factor = conv_dict[file_units.lower()] // conv_dict[target_units.lower()]
+        conv_dict["kWh"] = float (0.001)
+        conv_dict["Wh"] = 1
+        conv_dict["KJ"] = float (3.6)
+        conv_dict["J"] =  3600
+        conv_factor = conv_dict[file_units] // conv_dict[target_units]
         for e in converted_data:
             e *= conv_factor
             converted_data_units.append(e)
 
         file_data = converted_data
         # unit
-        if file_units.lower() != target_units.lower():
+        if file_units != target_units:
             file_units = target_units
 
         #writing the file:
