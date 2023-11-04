@@ -1,6 +1,5 @@
 import json, argparse, copy
 from argparse import Namespace
-
 def setup_argparse() -> Namespace:
     """
     take user input from the command line
@@ -9,13 +8,12 @@ def setup_argparse() -> Namespace:
     parser = argparse.ArgumentParser(
         prog='profile_converter.py',
         description='This program is able to read a source file containing data about consumed power, convert the units and time interval and write the converted data to another file.')
-    parser.add_argument('input_filename', help ='The name of the file containing the data that needs to be converted.')  # user specifies: value # https://docs.python.org/3/library/argparse.html#the-add-argument-method
+    parser.add_argument('input_filename', help ='The name of the file containing the data that needs to be converted.') # user specifies: value # https://docs.python.org/3/library/argparse.html#the-add-argument-method
     parser.add_argument('output_filename', help = 'The name of the converted output file.')
     parser.add_argument('--interval', type=int, default=15, choices=[1, 15, 30, 60, 1440], help = 'This parameter specifies the target interval in minutes.')  # user specifies: --name value # https://docs.python.org/3/library/argparse.html#choices
     parser.add_argument('--unit', default="Wh", choices=["kWh", "Wh", "KJ", "J"], help = 'This parameter specifies the target power unit. Unit input is case sensitive.')
     args = parser.parse_args()
     return args
-
 def converter(args: Namespace, conv_dict: dict):
     target_interval: int = args.interval
     target_unit: str = args.unit
@@ -46,7 +44,6 @@ def change_units(conv_dict, data_array, file_unit, target_unit):
         e *= conv_dict[target_unit] / conv_dict[file_unit]
         converted_data_units.append(e)
     return converted_data_units
-
 def change_interval(data_array, source_interval, target_interval):
     # interval more frequent to less frequent data:
     converted_data = []
@@ -67,7 +64,6 @@ def change_interval(data_array, source_interval, target_interval):
     return converted_data
 
 if __name__ == "__main__":
-
     conv_units = {}
     conv_units["kWh"] = float(0.001)  # unit * target / file unit
     conv_units["Wh"] = 1
