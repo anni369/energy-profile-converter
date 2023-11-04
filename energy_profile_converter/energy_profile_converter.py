@@ -8,13 +8,11 @@ def setup_argparse() -> Namespace:
     """
     parser = argparse.ArgumentParser(
         prog='profile_converter.py',
-        description='convert_energy-profile',
-        epilog='Text at the bottom of help')
-    parser.add_argument(
-        'input_filename')  # user specifies: value # https://docs.python.org/3/library/argparse.html#the-add-argument-method
-    parser.add_argument('output_filename')
-    parser.add_argument('--interval', type=int, default=15, choices=[1, 15, 30, 60, 1440])  # user specifies: --name value # https://docs.python.org/3/library/argparse.html#choices
-    parser.add_argument('--unit', default="Wh", choices=["kWh", "Wh", "KJ", "J"])
+        description='This program is able to read a source file containing data about consumed power, convert the units and time interval and write the converted data to another file.')
+    parser.add_argument('input_filename', help ='The name of the file containing the data that needs to be converted.')  # user specifies: value # https://docs.python.org/3/library/argparse.html#the-add-argument-method
+    parser.add_argument('output_filename', help = 'The name of the converted output file.')
+    parser.add_argument('--interval', type=int, default=15, choices=[1, 15, 30, 60, 1440], help = 'This parameter specifies the target interval in minutes.')  # user specifies: --name value # https://docs.python.org/3/library/argparse.html#choices
+    parser.add_argument('--unit', default="Wh", choices=["kWh", "Wh", "KJ", "J"], help = 'This parameter specifies the target power unit. Unit input is case sensitive.')
     args = parser.parse_args()
     return args
 
